@@ -6,5 +6,5 @@ import org.edrodev.randomuserapp.domain.user.model.User
 interface UserLocalDataSource {
 
     suspend fun saveUsers(users: List<User>)
-    fun findUsers(): Flow<User>
+    fun findUsers(): Flow<List<User>>
 }

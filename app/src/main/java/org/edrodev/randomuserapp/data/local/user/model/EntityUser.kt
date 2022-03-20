@@ -2,13 +2,14 @@ package org.edrodev.randomuserapp.data.local.user.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 import org.edrodev.randomuserapp.domain.user.model.Gender
 import org.edrodev.randomuserapp.domain.user.model.User
 
 @Entity
 data class EntityUser(
-    val email: String,
+    @PrimaryKey val email: String,
     val gender: String,
     @Embedded
     val location: EntityLocation,
