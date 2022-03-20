@@ -1,15 +1,18 @@
 package org.edrodev.randomuserapp.data.remote.user.model
 
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.edrodev.randomuserapp.domain.user.model.Name
 
 @Serializable
 data class NetworkName(
-    @SerialName("first")
     val first: String,
-    @SerialName("last")
     val last: String,
-    @SerialName("title")
     val title: String
+)
+
+fun NetworkName.toName() = Name(
+    first = first,
+    last = last,
+    title = title,
 )
