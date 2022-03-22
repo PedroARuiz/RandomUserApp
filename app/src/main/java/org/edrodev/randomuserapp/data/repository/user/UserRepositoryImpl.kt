@@ -21,6 +21,7 @@ class UserRepositoryImpl(
         )
 
     override fun findUsers(query: String): Flow<List<User>> = userLocalDataSource.findUsers(query)
+    override fun findUser(userEmail: String): Flow<User?> = userLocalDataSource.findUser(userEmail)
 
     override suspend fun deleteUser(user: User) = userLocalDataSource.deleteUser(user)
 }

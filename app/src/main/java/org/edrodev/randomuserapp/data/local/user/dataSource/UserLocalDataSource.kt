@@ -8,5 +8,6 @@ interface UserLocalDataSource {
 
     suspend fun saveUsers(users: List<User>): Either<Throwable, List<User>>
     fun findUsers(query: String): Flow<List<User>>
+    fun findUser(userEmail: String): Flow<User?>
     suspend fun deleteUser(user: User)
 }

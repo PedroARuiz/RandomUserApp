@@ -25,5 +25,9 @@ class UserLocalDataSourceImpl(
         .findUsers(query)
         .map{ it.map(EntityUser::toUser) }
 
+    override fun findUser(userEmail: String): Flow<User?> = userDao
+        .findUser(userEmail)
+        .map { it?.toUser() }
+
     override suspend fun deleteUser(user: User) = deleteUserDao.insert(user.toEntityDeleteUser())
 }
