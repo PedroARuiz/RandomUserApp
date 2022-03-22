@@ -6,7 +6,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.edrodev.randomuserapp.domain.user.model.User
@@ -24,10 +27,13 @@ class UserListViewModel(
     val state = _state.asStateFlow()
 
     init {
-        findUsers()
-            .onEach {
-                _state.value = state.value.copy(users = it)
-            }.launchIn(viewModelScope)
+        state
+        .map { it.filter }.distinctUntilChanged()
+        .flatMapLatest {
+            findUsers(it)
+        }.onEach {
+            _state.value = state.value.copy(users = it)
+        }.launchIn(viewModelScope)
     }
 
     fun loadUsers() {
@@ -47,9 +53,14 @@ class UserListViewModel(
         }
     }
 
+    fun filter(text: String) {
+        _state.value = state.value.copy(filter = text)
+    }
+
     data class State(
         val users: List<User> = emptyList(),
         val isFetchingUsers: Boolean = false,
         val error: Throwable? = null,
+        val filter: String = "",
     )
 }

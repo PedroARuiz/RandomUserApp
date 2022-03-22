@@ -23,6 +23,7 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Delete
@@ -49,12 +50,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
-import java.util.*
-import org.edrodev.randomuserapp.domain.user.model.Gender
-import org.edrodev.randomuserapp.domain.user.model.Location
-import org.edrodev.randomuserapp.domain.user.model.Name
-import org.edrodev.randomuserapp.domain.user.model.Picture
-import org.edrodev.randomuserapp.domain.user.model.Street
 import org.edrodev.randomuserapp.domain.user.model.User
 import org.edrodev.randomuserapp.domain.user.model.fake.fakeUser
 import org.edrodev.randomuserapp.ui.theme.RandomUserAppTheme
@@ -78,6 +73,7 @@ internal fun UserListScreen(
         onLoadUsers = viewModel::loadUsers,
         onUserClicked = onUserClicked,
         onDeleteUser = viewModel::removeUser,
+        onQueryChanged = viewModel::filter,
     )
 }
 
@@ -88,6 +84,7 @@ private fun Content(
     onLoadUsers: () -> Unit,
     onUserClicked: (User) -> Unit,
     onDeleteUser: (User) -> Unit,
+    onQueryChanged: (String) -> Unit,
 ) {
     val scaffoldState = rememberScaffoldState(
         snackbarHostState = snackbarHostState,
@@ -107,6 +104,7 @@ private fun Content(
                     onLoadUsers = onLoadUsers,
                     onUserClicked = onUserClicked,
                     onDeleteUser = onDeleteUser,
+                    onQueryChanged = onQueryChanged,
                 )
             } else {
                 EmptyState(
@@ -124,9 +122,16 @@ private fun UsersList(
     onLoadUsers: () -> Unit,
     onUserClicked: (User) -> Unit,
     onDeleteUser: (User) -> Unit,
+    onQueryChanged: (String) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     lazyListState.OnBottomReached { onLoadUsers() }
+
+    TextField(
+        modifier = modifier.fillMaxWidth(),
+        value = state.filter,
+        onValueChange = onQueryChanged,
+    )
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -276,6 +281,7 @@ private fun ContentPreview(@PreviewParameter(FakeStateProvider::class) state: Us
             onLoadUsers = {},
             onUserClicked = {},
             onDeleteUser = {},
+            onQueryChanged = {},
         )
     }
 

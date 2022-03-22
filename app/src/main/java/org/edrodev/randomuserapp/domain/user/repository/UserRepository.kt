@@ -8,7 +8,7 @@ interface UserRepository {
 
     suspend fun fetchUsers(count: Int): Either<Throwable, List<User>>
 
-    fun findUsers(): Flow<List<User>>
+    fun findUsers(query: String): Flow<List<User>>
 
     suspend fun deleteUser(user: User)
 
