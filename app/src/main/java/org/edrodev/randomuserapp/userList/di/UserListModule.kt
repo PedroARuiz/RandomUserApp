@@ -9,6 +9,7 @@ val userListModule = module {
         UserListViewModel(
             findUsers = get(),
             fetchUsers = get(),
+            deleteUser = get(),
         )
     }
 }

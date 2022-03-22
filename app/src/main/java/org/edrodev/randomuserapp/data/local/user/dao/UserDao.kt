@@ -16,6 +16,10 @@ interface UserDao {
     @Query("""
         SELECT *
         FROM EntityUser
+        WHERE email NOT IN(
+            SELECT *
+            FROM EntityDeleteUser
+        )
     """)
     fun findUsers(): Flow<List<EntityUser>>
 

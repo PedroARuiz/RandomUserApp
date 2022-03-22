@@ -18,13 +18,14 @@ import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.rememberScaffoldState
@@ -37,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +56,7 @@ import org.edrodev.randomuserapp.domain.user.model.Name
 import org.edrodev.randomuserapp.domain.user.model.Picture
 import org.edrodev.randomuserapp.domain.user.model.Street
 import org.edrodev.randomuserapp.domain.user.model.User
+import org.edrodev.randomuserapp.domain.user.model.fake.fakeUser
 import org.edrodev.randomuserapp.ui.theme.RandomUserAppTheme
 import org.koin.androidx.compose.get
 
@@ -74,6 +77,7 @@ internal fun UserListScreen(
         snackbarHostState = snackbarHostState,
         onLoadUsers = viewModel::loadUsers,
         onUserClicked = onUserClicked,
+        onDeleteUser = viewModel::removeUser,
     )
 }
 
@@ -83,6 +87,7 @@ private fun Content(
     snackbarHostState: SnackbarHostState = rememberScaffoldState().snackbarHostState,
     onLoadUsers: () -> Unit,
     onUserClicked: (User) -> Unit,
+    onDeleteUser: (User) -> Unit,
 ) {
     val scaffoldState = rememberScaffoldState(
         snackbarHostState = snackbarHostState,
@@ -101,6 +106,7 @@ private fun Content(
                     state = state,
                     onLoadUsers = onLoadUsers,
                     onUserClicked = onUserClicked,
+                    onDeleteUser = onDeleteUser,
                 )
             } else {
                 EmptyState(
@@ -117,6 +123,7 @@ private fun UsersList(
     state: UserListViewModel.State,
     onLoadUsers: () -> Unit,
     onUserClicked: (User) -> Unit,
+    onDeleteUser: (User) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     lazyListState.OnBottomReached { onLoadUsers() }
@@ -128,7 +135,11 @@ private fun UsersList(
         contentPadding = PaddingValues(16.dp),
     ) {
         items(state.users, key = User::email) { user ->
-            UserItemList(user = user, onUserClicked = onUserClicked)
+            UserItemList(
+                user = user,
+                onUserClicked = onUserClicked,
+                onDeleteUser = onDeleteUser,
+            )
         }
 
         item {
@@ -146,7 +157,7 @@ private fun UsersList(
 @Composable
 fun LazyListState.OnBottomReached(
     threshold: Int = 5,
-    loadMore : () -> Unit
+    loadMore : () -> Unit,
 ){
     val shouldLoadMore = remember {
         derivedStateOf {
@@ -172,6 +183,7 @@ fun LazyListState.OnBottomReached(
 private fun UserItemList(
     user: User,
     onUserClicked: (User) -> Unit,
+    onDeleteUser: (User) -> Unit,
 ) {
     Card(
         onClick = { onUserClicked(user) },
@@ -196,6 +208,7 @@ private fun UserItemList(
                 contentDescription = null,
             )
             Column(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
@@ -214,6 +227,14 @@ private fun UserItemList(
                     Icon(imageVector = Icons.Default.Phone, contentDescription = null)
                     Text(text = user.phone)
                 }
+            }
+
+            IconButton(onClick = { onDeleteUser(user) }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null,
+                    tint = Color.Red,
+                )
             }
         }
     }
@@ -241,32 +262,7 @@ internal class FakeStateProvider: PreviewParameterProvider<UserListViewModel.Sta
     override val values: Sequence<UserListViewModel.State> = sequenceOf(
         UserListViewModel.State(),
         UserListViewModel.State(
-            users = listOf(
-                User(
-                    email = "test@test.com",
-                    gender = Gender.female,
-                    location = Location(
-                        city = "City Test",
-                        state = "State test",
-                        street = Street(
-                            name = "Street name",
-                            number = 1,
-                        )
-                    ),
-                    name = Name(
-                        title = "Mrs",
-                        first = "Test",
-                        last = "Preview",
-                    ),
-                    phone = "123456789",
-                    picture = Picture(
-                        thumbnail = "",
-                        large = "",
-                        medium = "",
-                    ),
-                    registeredDate = Date(),
-                )
-            )
+            users = listOf(fakeUser),
         ),
     )
 }
@@ -279,6 +275,7 @@ private fun ContentPreview(@PreviewParameter(FakeStateProvider::class) state: Us
             state = state,
             onLoadUsers = {},
             onUserClicked = {},
+            onDeleteUser = {},
         )
     }
 
