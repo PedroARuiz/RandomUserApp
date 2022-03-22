@@ -99,4 +99,5 @@ dependencies {
     testImplementation("app.cash.turbine:turbine:0.7.0")
 
     implementation("io.arrow-kt:arrow-core:1.0.1")
+    implementation("io.coil-kt:coil-compose:2.0.0-rc02")
 }
