@@ -4,7 +4,7 @@ import arrow.core.Either
 import org.edrodev.randomuserapp.domain.user.model.User
 import org.edrodev.randomuserapp.domain.user.repository.UserRepository
 
-private const val DEFAULT_COUNT_USER_FETCH = 10
+private const val DEFAULT_COUNT_USER_FETCH = 40
 
 class FetchUsersUseCase(
     private val userRepository: UserRepository,

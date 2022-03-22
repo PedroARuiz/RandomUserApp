@@ -10,4 +10,6 @@ data class User(
     val phone: String,
     val picture: Picture,
     val registeredDate: Date,
-)
+) {
+    val fullName: String = "${name.title} ${name.first} ${name.last}"
+}

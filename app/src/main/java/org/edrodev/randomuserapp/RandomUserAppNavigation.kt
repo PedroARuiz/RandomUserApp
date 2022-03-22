@@ -15,7 +15,9 @@ fun RandomUserAppNavigation() {
     NavHost(navController = navController, startDestination = "users") {
 
         composable("users") {
-            UserListScreen()
+            UserListScreen(
+                onUserClicked = { TODO("navigate to user detail") }
+            )
         }
 
         composable("users/{userId}") {
