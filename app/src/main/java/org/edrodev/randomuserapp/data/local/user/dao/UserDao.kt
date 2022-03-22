@@ -19,8 +19,12 @@ interface UserDao {
         WHERE email NOT IN(
             SELECT *
             FROM EntityDeleteUser
+        ) AND (
+        email LIKE '%' || :query || '%'
+        OR first LIKE '%' || :query || '%'
+        OR last LIKE '%' || :query || '%'
         )
     """)
-    fun findUsers(): Flow<List<EntityUser>>
+    fun findUsers(query: String): Flow<List<EntityUser>>
 
 }

@@ -7,5 +7,5 @@ import org.edrodev.randomuserapp.domain.user.repository.UserRepository
 class FindUsersUseCase(
     private val userRepository: UserRepository,
 ) {
-    operator fun invoke(): Flow<List<User>> = userRepository.findUsers()
+    operator fun invoke(query: String): Flow<List<User>> = userRepository.findUsers(query)
 }

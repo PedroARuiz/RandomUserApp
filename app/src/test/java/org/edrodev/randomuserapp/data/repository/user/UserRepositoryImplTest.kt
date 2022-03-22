@@ -51,7 +51,7 @@ class UserRepositoryImplTest : KoinTest {
 
     @Test
     fun `findUsers post updates after fetch users`(): Unit = runBlocking {
-        sut.findUsers().test {
+        sut.findUsers("").test {
             assert(awaitItem().isEmpty())
             sut.fetchUsers(usersCount)
             assert(awaitItem().size == usersCount)
@@ -62,7 +62,7 @@ class UserRepositoryImplTest : KoinTest {
 
     @Test
     fun `deleted user not appears anymore`(): Unit = runBlocking {
-        sut.findUsers().test {
+        sut.findUsers("").test {
             userLocalDataSource.saveUsers(listOf(fakeUser))
             assert(awaitItem().size == 1)
             userLocalDataSource.deleteUser(fakeUser)
