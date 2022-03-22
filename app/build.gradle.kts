@@ -97,4 +97,6 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.6.1")
     testImplementation("androidx.test:core-ktx:1.4.0")
     testImplementation("app.cash.turbine:turbine:0.7.0")
+
+    implementation("io.arrow-kt:arrow-core:1.0.1")
 }

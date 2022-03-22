@@ -1,5 +1,7 @@
 package org.edrodev.randomuserapp.data.repository.user
 
+import arrow.core.Either
+import arrow.core.left
 import kotlinx.coroutines.flow.Flow
 import org.edrodev.randomuserapp.data.local.user.dataSource.UserLocalDataSource
 import org.edrodev.randomuserapp.data.remote.user.dataSource.UserRemoteDataSource
@@ -10,9 +12,13 @@ class UserRepositoryImpl(
     private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource,
 ) : UserRepository {
-    override suspend fun fetchUsers(count: Int): List<User> = userRemoteDataSource.getRandomUsers(count).also {
-        userLocalDataSource.saveUsers(it)
-    }
+    override suspend fun fetchUsers(count: Int): Either<Throwable, List<User>> =
+        userRemoteDataSource.getRandomUsers(count).fold(
+            ifRight = {
+                userLocalDataSource.saveUsers(it)
+            },
+            ifLeft = { it.left() }
+        )
 
     override fun findUsers(): Flow<List<User>> = userLocalDataSource.findUsers()
 }
