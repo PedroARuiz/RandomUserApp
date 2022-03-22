@@ -10,12 +10,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.edrodev.randomuserapp.domain.user.model.User
+import org.edrodev.randomuserapp.domain.user.useCase.DeleteUserUseCase
 import org.edrodev.randomuserapp.domain.user.useCase.FetchUsersUseCase
 import org.edrodev.randomuserapp.domain.user.useCase.FindUsersUseCase
 
 class UserListViewModel(
     private val findUsers: FindUsersUseCase,
     private val fetchUsers: FetchUsersUseCase,
+    private val deleteUser: DeleteUserUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
@@ -36,6 +38,12 @@ class UserListViewModel(
                 ifRight = {},
             )
             _state.value = state.value.copy(isFetchingUsers = false)
+        }
+    }
+
+    fun removeUser(user: User) {
+        viewModelScope.launch {
+            deleteUser(user)
         }
     }
 

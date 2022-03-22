@@ -10,4 +10,6 @@ interface UserRepository {
 
     fun findUsers(): Flow<List<User>>
 
+    suspend fun deleteUser(user: User)
+
 }

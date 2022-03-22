@@ -21,4 +21,6 @@ class UserRepositoryImpl(
         )
 
     override fun findUsers(): Flow<List<User>> = userLocalDataSource.findUsers()
+
+    override suspend fun deleteUser(user: User) = userLocalDataSource.deleteUser(user)
 }

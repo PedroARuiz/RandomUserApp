@@ -8,4 +8,5 @@ interface UserLocalDataSource {
 
     suspend fun saveUsers(users: List<User>): Either<Throwable, List<User>>
     fun findUsers(): Flow<List<User>>
+    suspend fun deleteUser(user: User)
 }

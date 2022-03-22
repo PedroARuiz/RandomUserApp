@@ -4,6 +4,8 @@ import androidx.room.Room
 import app.cash.turbine.test
 import kotlinx.coroutines.runBlocking
 import org.edrodev.randomuserapp.data.local.RandomUsersDataBase
+import org.edrodev.randomuserapp.data.local.user.dataSource.UserLocalDataSource
+import org.edrodev.randomuserapp.domain.user.model.fake.fakeUser
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +24,7 @@ class UserRepositoryImplTest : KoinTest {
     private val usersCount = 5
 
     private lateinit var sut: UserRepositoryImpl
+    private lateinit var userLocalDataSource: UserLocalDataSource
 
     private val testModule = module {
         single {
@@ -33,9 +36,10 @@ class UserRepositoryImplTest : KoinTest {
     @Before
     fun setUp() {
         loadKoinModules(testModule)
+        userLocalDataSource = get()
 
         sut = UserRepositoryImpl(
-            userLocalDataSource = get(),
+            userLocalDataSource = userLocalDataSource,
             userRemoteDataSource = get(),
         )
     }
@@ -51,6 +55,20 @@ class UserRepositoryImplTest : KoinTest {
             assert(awaitItem().isEmpty())
             sut.fetchUsers(usersCount)
             assert(awaitItem().size == usersCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `deleted user not appears anymore`(): Unit = runBlocking {
+        sut.findUsers().test {
+            userLocalDataSource.saveUsers(listOf(fakeUser))
+            assert(awaitItem().size == 1)
+            userLocalDataSource.deleteUser(fakeUser)
+            assert(awaitItem().isEmpty())
+            userLocalDataSource.saveUsers(listOf(fakeUser))
+            assert(awaitItem().isEmpty())
 
             cancelAndIgnoreRemainingEvents()
         }

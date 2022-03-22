@@ -7,10 +7,12 @@ import org.koin.dsl.module
 
 val userLocalModule = module {
     single { get<RandomUsersDataBase>().userDao() }
+    single { get<RandomUsersDataBase>().deleteUserDao() }
 
     single<UserLocalDataSource> {
         UserLocalDataSourceImpl(
             userDao = get(),
+            deleteUserDao = get(),
         )
     }
 }
