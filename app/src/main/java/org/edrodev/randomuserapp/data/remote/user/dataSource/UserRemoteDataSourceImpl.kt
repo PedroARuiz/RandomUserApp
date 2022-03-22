@@ -9,6 +9,6 @@ class UserRemoteDataSourceImpl(
     private val userService: UserService,
 ) : UserRemoteDataSource {
 
-    override suspend fun getRandomUsers() : List<User> =
-        userService.getRandomUsers().results.map(NetworkUser::toUser)
+    override suspend fun getRandomUsers(count: Int) : List<User> =
+        userService.getRandomUsers(count).results.map(NetworkUser::toUser)
 }

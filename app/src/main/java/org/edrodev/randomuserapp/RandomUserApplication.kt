@@ -10,6 +10,7 @@ class RandomUserApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            allowOverride(true)
             androidContext(applicationContext)
             modules(diModules)
         }

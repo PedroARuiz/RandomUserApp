@@ -11,12 +11,12 @@ import org.edrodev.randomuserapp.data.local.user.model.EntityUser
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(user: EntityUser)
+    suspend fun insert(users: List<EntityUser>)
 
     @Query("""
         SELECT *
         FROM EntityUser
     """)
-    fun findUsers(): Flow<EntityUser>
+    fun findUsers(): Flow<List<EntityUser>>
 
 }

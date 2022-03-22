@@ -4,5 +4,5 @@ import org.edrodev.randomuserapp.domain.user.model.User
 
 interface UserRemoteDataSource {
 
-    suspend fun getRandomUsers(): List<User>
+    suspend fun getRandomUsers(count: Int): List<User>
 }
