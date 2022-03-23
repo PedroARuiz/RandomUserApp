@@ -53,13 +53,13 @@ import coil.transform.CircleCropTransformation
 import org.edrodev.randomuserapp.domain.user.model.User
 import org.edrodev.randomuserapp.domain.user.model.fake.fakeUser
 import org.edrodev.randomuserapp.ui.theme.RandomUserAppTheme
-import org.koin.androidx.compose.get
+import org.koin.androidx.compose.viewModel
 
 @Composable
 internal fun UserListScreen(
-    viewModel: UserListViewModel = get(),
     onUserClicked: (User) -> Unit,
 ) {
+    val viewModel: UserListViewModel by viewModel()
     val state by viewModel.state.collectAsState()
     val snackbarHostState = rememberScaffoldState().snackbarHostState
 

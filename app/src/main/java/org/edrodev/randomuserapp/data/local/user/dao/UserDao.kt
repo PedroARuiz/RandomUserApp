@@ -27,4 +27,11 @@ interface UserDao {
     """)
     fun findUsers(query: String): Flow<List<EntityUser>>
 
+    @Query("""
+        SELECT *
+        FROM EntityUser
+        WHERE email == :userEmail
+    """)
+    fun findUser(userEmail: String): Flow<EntityUser?>
+
 }

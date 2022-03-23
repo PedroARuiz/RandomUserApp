@@ -16,12 +16,20 @@ fun RandomUserAppNavigation() {
 
         composable("users") {
             UserListScreen(
-                onUserClicked = { TODO("navigate to user detail") }
+                onUserClicked = {
+                    navController.navigate("users/${it.email}") {
+                        popUpTo("users")
+                    }
+                }
             )
         }
 
-        composable("users/{userId}") {
-            UserDetailScreen()
+        composable("users/{userEmail}") {
+            val userEmail = requireNotNull(it.arguments?.getString("userEmail"))
+            UserDetailScreen(
+                userEmail = userEmail,
+                navigateUp = { navController.navigateUp() }
+            )
         }
     }
 
